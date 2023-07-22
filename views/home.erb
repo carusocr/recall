@@ -76,45 +76,46 @@
   <br/>
 <% end %><%= @title + ' Recall ' %>
 <% @notes.reverse_each do |note| %>
-  <% note.status = :overdue if note.created_at < Date.today && note.status == :new %>
-  <% note.status = :repeater if note.repeater == true && note.status == :new %>
-  <% if note.created_at == $curday || note.status == :overdue && note.created_at < $curday && $curday <= Date.today || note.completed_at == $curday || note.status == :doing %>
-    <article class="<%= note.status %>">
-      <% if !note.complete %>
-        <a class="content" href="/<%= note.id %>">
-          <%= note.content %>
+  <% puts note.inspect %>
+  <% note[:status] = :overdue if note[:created_at] < Date.today && note[:status] == :new %>
+  <% note[:status] = :repeater if note[:repeater] == true && note[:status] == :new %>
+  <% if note[:created_at] == $curday || note[:status] == :overdue && note[:created_at] < $curday && $curday <= Date.today || note[:completed_at] == $curday || note[:status] == :doing %>
+    <article class="<%= note[:status] %>">
+      <% if !note[:complete] %>
+        <a class="content" href="/<%= note[:id] %>">
+          <%= note[:content] %>
         </a>
-        <% if note.task_date && note.repeater == false %>
-          <%= note.task_date if (($curday - note.task_date).to_i > 3) %>
+        <% if note[:task_date] && note[:repeater] == false %>
+          <%= note[:task_date] if (($curday - note[:task_date]).to_i > 3) %>
         <% end %>
       <% else %>
-        <%= note.content %>
+        <%= note[:content] %>
       <% end %>
-      <%= note.created_at if (note.status == :overdue || note.active == true || note.created_at != note.completed_at) && $curday != note.created_at %>
-      <%= "  (R)" if (note.repeater == true && note.status == :done) %>
+      <%= note[:created_at] if (note[:status] == :overdue || note[:active] == true || note[:created_at] != note[:completed_at]) && $curday != note[:created_at] %>
+      <%= "  (R)" if (note[:repeater] == true && note[:status] == :done) %>
       <p class="comment">
-        <% if note.duration != nil && note.duration > 0 && note.active == false %>
+        <% if note[:duration] != nil && note[:duration] > 0 && note[:active] == false %>
           Duration:
-          <%= note.duration.round %>
+          <%= note[:duration].round %>
           min
         <% end %>
-        <% if !note.comment.nil? && (note.complete == true || note.status == :slack) %>
+        <% if !note[:comment].nil? && (note[:complete] == true || note[:status] == :slack) %>
           <br>
-            <%= note.comment %>
+            <%= note[:comment] %>
           </br>
         <% end %>
       </p>
       <p class="icons meta">
-        <% unless note.status == :slack || note.complete == true %>
-          <a class="meta" href="/<%= note.id %>/activate">*</a>
-          <a class="meta" href="/<%= note.id %>/slack">&#8621</a>
+        <% unless note[:status] == :slack || note[:complete] == true %>
+          <a class="meta" href="/<%= note[:id] %>/activate">*</a>
+          <a class="meta" href="/<%= note[:id] %>/slack">&#8621</a>
         <% end %>
-        <a class="meta" href="/<%= note.id %>/complete">&#9635</a>
-        <% if note.complete == true || note.status == :slack %>
-          <a class="meta" href="/<%= note.id %>/comment">...</a>
+        <a class="meta" href="/<%= note[:id] %>/complete">&#9635</a>
+        <% if note[:complete] == true || note[:status] == :slack %>
+          <a class="meta" href="/<%= note[:id] %>/comment">...</a>
         <% end %>
-        <% unless note.status == :slack %>
-          <a class="right meta" href="/<%= note.id %>/delete">&#9762</a>
+        <% unless note[:status] == :slack %>
+          <a class="right meta" href="/<%= note[:id] %>/delete">&#9762</a>
         <% end %>
       </p>
     </article>
@@ -122,4 +123,3 @@
 <% end %>
 <br/>
 <br/>
-
