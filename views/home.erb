@@ -1,0 +1,125 @@
+<html>
+  <head></head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js" type="text/javascript">
+    <meta charset="utf8">
+      <title>
+        <html>
+  <head></head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js" type="text/javascript"></script>
+  <link href="datepicker.css" rel="stylesheet">
+    <script>
+      
+      $(function() {
+        $("#datepicker").datepicker();
+      });
+      $(function() {
+        $("#dp").change(function(){
+          $("#dp").submit();
+        });
+        $('#note_entry').keydown(function (e) {
+          if (e.which == 13) {
+            jQuery(this).blur();
+            jQuery("#note_input").focus().click();
+          }
+          if (e.which == 27) {
+            e.preventDefault();
+            $("#note_entry").val("");
+          }
+        });
+      });
+
+    </script>
+    <meta charset="utf8">
+      <title>
+        <%= @title + ' Recall ' %>
+      </title>
+      <link href="/reset.css" rel="stylesheet"></link>
+      <link href="style.css" rel="stylesheet"></link>
+    </meta>
+  </link>
+  <body>
+    <header>
+      <hgroup>
+        <h1>
+          <a href="/">crc</a>
+        </h1>
+        <h2>
+          <%= "Task List For " + $curday.to_s %>
+        </h2>
+        <h3>
+          <a href="/prevday">&#8668</a>
+          <a href="/present">&#9784</a>
+          <a href="/nextday">&#8669</a>
+        </h3>
+        <h4>
+          <p>
+            <form action="/datejump" id="dp" method="post">
+              <input id="datepicker" name="newdate" type="text" value="Jump to Date!"></input>
+            </form>
+          </p>
+        </h4>
+      </hgroup>
+    </header>
+  </body>
+</html>
+<% if Date.today <= $curday %>
+  <section id="new_note">
+    <form action="/" method="post">
+      <textarea id="note_entry" name="content" placeholder="Your note..."></textarea>
+      <input name="repeater" type="hidden" value="0"></input>
+      <input name="repeater" type="checkbox" value="1">Repeater</input>
+      <input id="note_input" type="submit" value="Take Note!"></input>
+    </form>
+  </section>
+  <br/>
+<% end %><%= @title + ' Recall ' %>
+<% @notes.reverse_each do |note| %>
+  <% note.status = :overdue if note.created_at < Date.today && note.status == :new %>
+  <% note.status = :repeater if note.repeater == true && note.status == :new %>
+  <% if note.created_at == $curday || note.status == :overdue && note.created_at < $curday && $curday <= Date.today || note.completed_at == $curday || note.status == :doing %>
+    <article class="<%= note.status %>">
+      <% if !note.complete %>
+        <a class="content" href="/<%= note.id %>">
+          <%= note.content %>
+        </a>
+        <% if note.task_date && note.repeater == false %>
+          <%= note.task_date if (($curday - note.task_date).to_i > 3) %>
+        <% end %>
+      <% else %>
+        <%= note.content %>
+      <% end %>
+      <%= note.created_at if (note.status == :overdue || note.active == true || note.created_at != note.completed_at) && $curday != note.created_at %>
+      <%= "  (R)" if (note.repeater == true && note.status == :done) %>
+      <p class="comment">
+        <% if note.duration != nil && note.duration > 0 && note.active == false %>
+          Duration:
+          <%= note.duration.round %>
+          min
+        <% end %>
+        <% if !note.comment.nil? && (note.complete == true || note.status == :slack) %>
+          <br>
+            <%= note.comment %>
+          </br>
+        <% end %>
+      </p>
+      <p class="icons meta">
+        <% unless note.status == :slack || note.complete == true %>
+          <a class="meta" href="/<%= note.id %>/activate">*</a>
+          <a class="meta" href="/<%= note.id %>/slack">&#8621</a>
+        <% end %>
+        <a class="meta" href="/<%= note.id %>/complete">&#9635</a>
+        <% if note.complete == true || note.status == :slack %>
+          <a class="meta" href="/<%= note.id %>/comment">...</a>
+        <% end %>
+        <% unless note.status == :slack %>
+          <a class="right meta" href="/<%= note.id %>/delete">&#9762</a>
+        <% end %>
+      </p>
+    </article>
+  <% end %>
+<% end %>
+<br/>
+<br/>
+

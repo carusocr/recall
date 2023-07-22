@@ -1,0 +1,25 @@
+<title>
+  <%= 'Editing ' + field.capitalize %>
+</title>
+<% if @note %>
+  <form action="/<%= @note.id %>/<%= field %>" id="edit" method="post">
+    <input name="_method" type="hidden" value="put">
+      <% if field == 'content' %>
+        <textarea autofocus="<%= true %>" cols="60" name="<%= field %>" rows="6">
+          <%= @note.content %>
+        </textarea>
+      <% else %>
+        <textarea autofocus="<%= true %>" cols="40" name="<%= field %>" rows="4">
+          <%= @note.comment %>
+        </textarea>
+      <% end %>
+    </input>
+    <br/>
+    <input type="submit" value="Update"></input>
+  </form>
+  <form action="/" method="get">
+    <input type="submit" value="Cancel"></input>
+  </form>
+<% else %>
+  <p>Note not found!</p>
+<% end %>

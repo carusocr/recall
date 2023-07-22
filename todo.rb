@@ -37,12 +37,11 @@ get '/' do
   #notes = Note.all(:created_at => $curday) | Note.all(:created_at.lt => Date.today, :status => :new) | Note.all(:completed_at => $curday) | Note.all(:status => :doing)
 
   notes = DB[:notes]
-	#return notes.all.to_json
 	@notes = notes.all
 	@title = ' - CRC - '
   #haml :home, :locals => {:curday => $curday}
-	haml :index
+	erb :home, locals: {curday: $curday}
 
 end
 
-Sinatra::Application.run!
+#Sinatra::Application.run!
