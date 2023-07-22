@@ -44,4 +44,27 @@ get '/' do
 
 end
 
+get '/present' do
+  $curday = Date.today
+  redirect '/'
+end
+
+get '/nextday' do
+  $curday = $curday + 1.day
+  redirect '/'
+end
+
+get '/prevday' do
+  $curday = $curday - 1.day
+  redirect '/'
+end
+
+post '/datejump' do
+  if params[:newdate] == ''
+  else
+    $curday = Date.strptime("#{params[:newdate]}", '%m/%d/%Y') #fix date format
+    redirect '/'
+  end
+end
+
 #Sinatra::Application.run!
