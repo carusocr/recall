@@ -1,0 +1,43 @@
+%html
+  %head
+  %script{:type => "text/javascript", :src => "http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"}
+  %script{:type => "text/javascript", :src => "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js" }
+    %meta{:charset => "utf8"}
+      %title= @title + ' Recall '
+      %link{:href => "/reset.css", :rel => "stylesheet"}
+      %link{:href => "style.css", :rel => "stylesheet"}
+  %body
+    %header
+      %hgroup
+        %h1
+          %a{:href => "/"} crc
+        %h2= "Task List For " + $curday.to_s
+- @notes.reverse_each do |note|
+  - if note.created_at == $curday || note.status == :overdue && note.created_at < $curday && $curday <= Date.today || note.completed_at == $curday || note.status == :doing
+    %article{:class => "#{note.status}"}
+      - if !note.complete
+        %a.content{:href => "/#{note.id}"}= note.content
+        - if note.task_date && note.repeater == false
+          = note.task_date if (($curday - note.task_date).to_i > 3)
+      - else
+        = note.content
+      = note.created_at if (note.status == :overdue || note.active == true || note.created_at != note.completed_at) && $curday != note.created_at
+      = "  (R)" if (note.repeater == true && note.status == :done)
+      %p.comment
+        - if note.duration != nil && note.duration > 0 && note.active == false
+          Duration:
+          = note.duration.round
+          min
+        - if !note.comment.nil? && (note.complete == true || note.status == :slack)
+          %br= note.comment
+      %p.icons.meta
+        - unless note.status == :slack || note.complete == true
+          %a.meta{:href => "/#{note.id}/activate"} ↯
+          %a.meta{:href => "/#{note.id}/slack"} &#8621
+        %a.meta{:href => "/#{note.id}/complete"} &#9635
+        - if note.complete == true || note.status == :slack
+          %a.meta{:href => "/#{note.id}/comment"} ...
+        - unless note.status == :slack
+          %a.right.meta{:href => "/#{note.id}/delete"} &#9762
+%br
+%br

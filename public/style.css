@@ -1,0 +1,181 @@
+body {
+	margin: 15px auto;
+	width: 640px;
+}
+header {
+	text-align: center;
+	margin: 0 0 20px;
+}
+header h1 {
+	display: inline;
+	font-size: 32px;
+}
+header h1 a:link, header h1 a:visited {
+	color: #1100;
+	text-decoration: none;
+}
+header h2 {
+	font-size: 16px;
+	font-style: italic;
+	color: #999;
+}
+header h4 {
+  text-align: right;
+}
+tr {
+  border: solid black 1px;
+}
+#shoplist {
+	padding: 5px 10px;
+  box-shadow: 10px 10px 5px #888888;
+  border: solid black 2px;
+  border-radius: 5px;
+  border-spacing: 1;
+  background-image: linear-gradient(to right, #FAFAFA 0%, #DDDDDD 100%);
+}
+#shoplist th {
+font-size:1.2em;
+text-align:left;
+padding-top:5px;
+padding-bottom:4px;
+background-color:#A7C942;
+color:#fff;
+}
+.acmemarkets {
+background-color:#A4C8C8;
+}
+.thefreshgrocer {
+background-color:#FFE4C4;
+}
+.pathmark {
+background-color:#FFE4D4;
+}
+.superfresh {
+background-color:#8FBC8F;
+}
+#shoplist td {
+font-size:.8em;
+border:1px solid #98bf21;
+padding:3px 7px 2px 7px;
+}
+#main {
+	margin: 0 0 10px;
+}
+#add {
+	margin: 0 0 10px;
+}
+#new_note textarea {
+  width: 460px;
+  border-radius: 5px;
+}
+#edit textarea {
+	height: 50px;
+	width: 480px;
+	padding: 10px;
+	border: 1px solid #ddd;
+}
+#edit input[type=submit] {
+	height: 50px;
+	margin: -50px 0 0;
+	border: 1px solid #ddd;
+	background: white;
+}
+#edit input[type=checkbox] {
+	height: 50px;
+	width: 20px;
+}
+article {
+	border: 1px solid #323232;
+	padding: 5px 10px;
+  box-shadow: 10px 10px 5px #888888;
+  border-radius: 10px;
+  background-image: linear-gradient(to right, #EEEEEE 0%, #BBBBBB 100%);
+}
+article:first-of-type {
+	border: 1px solid #323232;
+}
+article:nth-child(even) {
+  background-image: linear-gradient(to left, #FAFAFA 0%, #DDDDDD 100%);
+}
+article.doing {
+  background-image: linear-gradient(to left, #008812 0%, #007004 100%);
+	color: #111;
+}
+article.done {
+  background-image: linear-gradient(to right, #009aaa 0%, #006482 100%);
+	color: #111;
+}
+article.slack {
+  background-image: linear-gradient(to right, #EEDD82 0%, #C0B85D 100%);
+}
+article.overdue {
+  background-image: linear-gradient(to right, #942424 0%, #600000 100%);
+	color: #EEDD82;
+}
+article.repeater {
+  background-image: linear-gradient(to right, #c4e8d8 0%, #b4c6b4 100%);
+}
+article span {
+	font-size: 0.8em;
+}
+p {
+	margin: 0 0 5px;
+}
+.icons {
+	font-size: 1.2em;
+	color: #222;
+}
+a.meta {
+	color: #AAA;
+	text-decoration: none;
+}
+a.meta_light {
+	color: #EEE;
+	text-decoration: none;
+}
+a.meta:visited {
+	color: #AAA;
+	text-decoration: none;
+}
+.comment {
+	font-size: 0.8em;
+	color: #AAA;
+	font-style: italic;
+}
+.content {
+	text-decoration: none;
+}
+.links {
+	font-size: 1.8em;
+	line-height: 0.8em;
+	float: right;
+	margin: -10px 0 0;
+}
+.links a {
+	display: block;
+	text-decoration: none;
+}
+#note_input {
+	vertical-align: bottom;
+	float: right;
+  border: solid 1px #777;
+  border-radius: 5px;
+  box-shadow: 5px 5px 2px #888888;
+.right {
+}
+#shop {
+  box-shadow: 5px 5px 2px #888888;
+.left {
+	float: left;
+}	
+.center {
+	float: center;
+}
+#note_entry {
+    border: solid 1px #777;
+    height: 18;
+    width: 250px;
+    color: #999;
+    padding-left: 5px;
+    vertical-align: bottom
+}
