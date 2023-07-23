@@ -11,6 +11,7 @@ require 'active_support/all'
 require 'sinatra'
 
 $curday = Date.today
+duration = {}
 
 DB = Sequel.connect('sqlite://recall.db')
 
@@ -19,7 +20,7 @@ unless DB.table_exists?(:notes)
 		primary_key :id
 		String :content, null: false
 		String :comment
-		String :status
+		String :status, default: 'new'
 		Date :created_at
 		Date :task_date
 		DateTime :updated_at
@@ -31,10 +32,14 @@ unless DB.table_exists?(:notes)
 		TrueClass :repeater, default: false
 	end
 end
+
+#testing better format
+class Note < Sequel::Model
+end
 				
 		
 get '/' do
-  #notes = Note.all(:created_at => $curday) | Note.all(:created_at.lt => Date.today, :status => :new) | Note.all(:completed_at => $curday) | Note.all(:status => :doing)
+  #notes = Note.all(:created_at => $curday) | Note.all(:created_at.lt => Date.today, :status => 'new') | Note.all(:completed_at => $curday) | Note.all(:status => :doing)
 
   notes = DB[:notes]
 	@notes = notes.all
@@ -72,6 +77,58 @@ post '/' do
 end
 
 def task_create(content, repeater)
-  puts DB[:notes].all.inspect
-  DB[:notes].insert(:content=> params[content], :repeater=> params[repeater], :created_at=> $curday)
+
+	Note.create(content: params[content],
+							repeater: params[repeater],
+							created_at: $curday)
+
 end
+
+def save(id, field)
+  n = Note.get params[id]
+  if field == 'comment'
+    n.comment = params[:comment]
+  else
+    n.content = params[:content]
+  end
+  n[:updated_at] = Time.now
+  n.save
+  redirect '/'
+end
+
+get '/:id/complete' do
+  n = Note.where(id: params[:id]).first
+  if n[:status] == 'new' || n[:status] == :slack || n[:active] == true
+    n[:status] = 'done'
+    n[:complete] = true
+    n[:active] = false
+  elsif n[:complete] == true
+    n[:status] = 'new'
+    n[:complete] = false
+    duration["#{n}"] = 0
+  end
+  n[:updated_at] = Time.now
+  n[:completed_at] = $curday
+  n.save
+  redirect '/'
+end
+
+get '/:id/delete' do
+	Note.where(id: params[:id]).delete
+  redirect '/'
+end
+
+get '/:id/activate' do
+  n = Note.where(id: params[:id]).first
+  if (n.active == true || n.status == 'doing')
+    n.status = 'new'
+    n.active = false
+  elsif (n.status == 'new' || n.status == 'overdue') && $curday == Date.today
+    n.status = 'doing'
+    n.active = true
+  end
+  n.updated_at = Time.now
+  n.save
+  redirect '/'
+end
+
