@@ -39,7 +39,6 @@ get '/' do
   notes = DB[:notes]
 	@notes = notes.all
 	@title = ' - CRC - '
-  #haml :home, :locals => {:curday => $curday}
 	erb :home, locals: {curday: $curday}
 
 end
@@ -67,4 +66,12 @@ post '/datejump' do
   end
 end
 
-#Sinatra::Application.run!
+post '/' do
+  task_create(:content, :repeater)
+  redirect '/'
+end
+
+def task_create(content, repeater)
+  puts DB[:notes].all.inspect
+  DB[:notes].insert(:content=> params[content], :repeater=> params[repeater], :created_at=> $curday)
+end
