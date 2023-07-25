@@ -76,7 +76,6 @@
   <br/>
 <% end %><%= @title + ' Recall ' %>
 <% @notes.reverse_each do |note| %>
-  <% puts note.inspect %>
   <% note[:status] = :overdue if note[:created_at] < Date.today && note[:status] == :new %>
   <% note[:status] = :repeater if note[:repeater] == true && note[:status] == :new %>
   <% if note[:created_at] == $curday || note[:status] == :overdue && note[:created_at] < $curday && $curday <= Date.today || note[:completed_at] == $curday || note[:status] == :doing %>
