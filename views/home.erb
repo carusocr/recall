@@ -76,10 +76,9 @@
   <br/>
 <% end %><%= @title + ' Recall ' %>
 <% @notes.reverse_each do |note| %>
-  <% puts note.inspect %>
-  <% note[:status] = :overdue if note[:created_at] < Date.today && note[:status] == :new %>
-  <% note[:status] = :repeater if note[:repeater] == true && note[:status] == :new %>
-  <% if note[:created_at] == $curday || note[:status] == :overdue && note[:created_at] < $curday && $curday <= Date.today || note[:completed_at] == $curday || note[:status] == :doing %>
+  <% note[:status] = :overdue if DateTime.parse("#{note[:created_at]}") < Date.today && note[:status] == 'new' %>
+  <% note[:status] = :repeater if note[:repeater] == true && note[:status] == 'new' %>
+  <% if note[:created_at] == $curday || note[:status] == :overdue && DateTime.parse("#{note[:created_at]}") < $curday && $curday <= Date.today || note[:completed_at] == $curday || note[:status] == :doing %>
     <article class="<%= note[:status] %>">
       <% if !note[:complete] %>
         <a class="content" href="/<%= note[:id] %>">
@@ -116,6 +115,7 @@
         <% end %>
         <% unless note[:status] == :slack %>
           <a class="right meta" href="/<%= note[:id] %>/delete">&#9762</a>
+          <% puts note[:status] %>
         <% end %>
       </p>
     </article>

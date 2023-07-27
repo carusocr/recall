@@ -48,6 +48,18 @@ get '/' do
 
 end
 
+get '/:id/comment' do
+  edit(:id, 'comment')
+end
+
+put '/:id/content' do
+  save(:id, 'content')
+end
+
+put '/:id/comment' do
+  save(:id, 'comment')
+end
+
 get '/present' do
   $curday = Date.today
   redirect '/'
@@ -63,6 +75,11 @@ get '/prevday' do
   redirect '/'
 end
 
+get '/:id' do
+  edit(:id, 'content')
+end
+
+
 post '/datejump' do
   if params[:newdate] == ''
   else
@@ -77,28 +94,34 @@ post '/' do
 end
 
 def task_create(content, repeater)
-
 	Note.create(content: params[content],
 							repeater: params[repeater],
 							created_at: $curday)
+end
 
+def edit(id,field)
+  #@note = Note.get params[id]
+  @note = Note.where(id: params[:id]).first
+  @title = "Edit note ##{params[id]}"
+  erb :edit, :locals => {:field => field}
 end
 
 def save(id, field)
-  n = Note.get params[id]
+  n = Note.where(id: params[:id]).first
   if field == 'comment'
     n.comment = params[:comment]
   else
     n.content = params[:content]
   end
-  n[:updated_at] = Time.now
+  n.updated_at = Time.now
   n.save
   redirect '/'
 end
 
 get '/:id/complete' do
   n = Note.where(id: params[:id]).first
-  if n[:status] == 'new' || n[:status] == :slack || n[:active] == true
+  puts n[:status].inspect
+  if n[:status] == 'new' || n[:status] == 'slack' || n[:active] == true
     n[:status] = 'done'
     n[:complete] = true
     n[:active] = false
@@ -130,5 +153,13 @@ get '/:id/activate' do
   n.updated_at = Time.now
   n.save
   redirect '/'
+end
+
+get '/:id/slack' do
+  n = Note.where(id: params[:id]).first
+  n.status = :slack
+  n.updated_at = Time.now
+  n.save
+  edit(:id, 'comment')
 end
 
