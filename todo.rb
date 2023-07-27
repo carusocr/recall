@@ -120,7 +120,8 @@ end
 
 get '/:id/complete' do
   n = Note.where(id: params[:id]).first
-  if n[:status] == 'new' || n[:status] == :slack || n[:active] == true
+  puts n[:status].inspect
+  if n[:status] == 'new' || n[:status] == 'slack' || n[:active] == true
     n[:status] = 'done'
     n[:complete] = true
     n[:active] = false
@@ -152,5 +153,13 @@ get '/:id/activate' do
   n.updated_at = Time.now
   n.save
   redirect '/'
+end
+
+get '/:id/slack' do
+  n = Note.where(id: params[:id]).first
+  n.status = :slack
+  n.updated_at = Time.now
+  n.save
+  edit(:id, 'comment')
 end
 
