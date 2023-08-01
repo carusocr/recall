@@ -36,16 +36,50 @@ end
 #testing better format
 class Note < Sequel::Model
 end
-				
 		
-get '/' do
-  #notes = Note.all(:created_at => $curday) | Note.all(:created_at.lt => Date.today, :status => 'new') | Note.all(:completed_at => $curday) | Note.all(:status => :doing)
+def task_create(content, repeater)
+	Note.create(content: content,
+							repeater: repeater,
+							created_at: $curday)
+end
 
+def edit(id,field)
+  #@note = Note.get params[id]
+  @note = Note.where(id: params[:id]).first
+  @title = "Edit note ##{params[id]}"
+  erb :edit, :locals => {:field => field}
+end
+
+def save(id, field)
+  n = Note.where(id: params[:id]).first
+  if field == 'comment'
+    n.comment = params[:comment]
+  else
+    n.content = params[:content]
+  end
+  n.updated_at = Time.now
+  n.save
+  redirect '/'
+end
+
+def check_repeaters()
+  repeaters = Note.where(repeater: true).each do |rep|
+    if rep.created_at.cwday == Date.today.cwday and rep.complete == true and rep.created_at != Date.today
+      puts "puts repeating #{rep.content}!"
+      # make new note, same content
+      rep.repeater = false
+      rep.save
+      Note.create(repeater: true, complete: false, status: 'new', created_at: Date.today, content: rep.content)
+    end
+  end
+end
+
+get '/' do
+  check_repeaters()
   notes = DB[:notes]
 	@notes = notes.all
 	@title = ' - CRC - '
 	erb :home, locals: {curday: $curday}
-
 end
 
 get '/:id/comment' do
@@ -93,30 +127,6 @@ post '/' do
   redirect '/'
 end
 
-def task_create(content, repeater)
-	Note.create(content: params[content],
-							repeater: params[repeater],
-							created_at: $curday)
-end
-
-def edit(id,field)
-  #@note = Note.get params[id]
-  @note = Note.where(id: params[:id]).first
-  @title = "Edit note ##{params[id]}"
-  erb :edit, :locals => {:field => field}
-end
-
-def save(id, field)
-  n = Note.where(id: params[:id]).first
-  if field == 'comment'
-    n.comment = params[:comment]
-  else
-    n.content = params[:content]
-  end
-  n.updated_at = Time.now
-  n.save
-  redirect '/'
-end
 
 get '/:id/complete' do
   n = Note.where(id: params[:id]).first
