@@ -75,7 +75,7 @@
   </section>
   <br/>
 <% end %><%= @title + ' Recall ' %>
-<% @notes.reverse_each do |note| %>
+<% @notes.sort_by {|v| v[:status]}.reverse_each do |note| %>
   <% note[:status] = :overdue if DateTime.parse("#{note[:created_at]}") < Date.today && note[:status] == 'new' %>
   <% note[:status] = :repeater if note[:repeater] == true && note[:status] == 'new' %>
   <% if note[:created_at] == $curday || note[:status] == :overdue && DateTime.parse("#{note[:created_at]}") < $curday && $curday <= Date.today || note[:completed_at] == $curday || note[:status] == :doing %>
