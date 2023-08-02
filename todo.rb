@@ -38,8 +38,8 @@ class Note < Sequel::Model
 end
 		
 def task_create(content, repeater)
-	Note.create(content: content,
-							repeater: repeater,
+	Note.create(content: params[content],
+							repeater: params[repeater],
 							created_at: $curday)
 end
 
@@ -65,7 +65,6 @@ end
 def check_repeaters()
   repeaters = Note.where(repeater: true).each do |rep|
     if rep.created_at.cwday == Date.today.cwday and rep.complete == true and rep.created_at != Date.today
-      puts "puts repeating #{rep.content}!"
       # make new note, same content
       rep.repeater = false
       rep.save
