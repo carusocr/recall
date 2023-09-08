@@ -1,10 +1,8 @@
-<title>
-  <%= 'Editing ' + field.capitalize %>
-</title>
+<%= @title %>
 <% if @note %>
   <form action="/<%= @note.id %>/<%= field %>" id="edit" method="post">
     <input name="_method" type="hidden" value="put">
-    <textarea id="edit" cols="60" rows="1">
+      <textarea id="edit" name="content" cols="60" rows="1">
         <%= @note.content %>
       </textarea>
     </input>

@@ -44,7 +44,6 @@ def task_create(content, repeater)
 end
 
 def edit(id,field)
-  #@note = Note.get params[id]
   @note = Note.where(id: params[:id]).first
   @title = "Edit note ##{params[id]}"
   erb :edit, :locals => {:field => field}
@@ -55,7 +54,7 @@ def save(id, field)
   if field == 'comment'
     n.comment = params[:comment]
   else
-    n.content = params[:content]
+    n.content = params[field]
   end
   n.updated_at = Time.now
   n.save
