@@ -4,16 +4,12 @@
 <% if @note %>
   <form action="/<%= @note.id %>/<%= field %>" id="edit" method="post">
     <input name="_method" type="hidden" value="put">
-      <% if field == 'content' %>
-        <textarea autofocus="<%= true %>" cols="60" name="<%= field %>" rows="6">
-          <%= @note.content %>
-        </textarea>
-      <% else %>
-        <textarea autofocus="<%= true %>" cols="40" name="<%= field %>" rows="4">
-          <%= @note.comment %>
-        </textarea>
-      <% end %>
+    <textarea id="edit" cols="60" rows="1">
+        <%= @note.content %>
+      </textarea>
     </input>
+    <br/>
+    <br/>
     <br/>
     <input type="submit" value="Update"></input>
   </form>
