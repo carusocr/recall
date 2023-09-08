@@ -69,13 +69,13 @@ padding:3px 7px 2px 7px;
   border-radius: 5px;
 }
 #edit textarea {
-	height: 50px;
+	height: 20px;
 	width: 480px;
 	padding: 10px;
 	border: 1px solid #ddd;
 }
 #edit input[type=submit] {
-	height: 50px;
+	height: 20px;
 	margin: -50px 0 0;
 	border: 1px solid #ddd;
 	background: white;

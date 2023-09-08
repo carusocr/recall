@@ -63,6 +63,9 @@ def save(id, field)
 end
 
 def check_repeaters()
+  if Date.today.day == 10
+    Note.find_or_create(:content=>"Rotate Mattress",:created_at=>Date.today)
+  end
   repeaters = Note.where(repeater: true).each do |rep|
     if rep.created_at.cwday == Date.today.cwday and rep.complete == true and rep.created_at != Date.today
       # make new note, same content
