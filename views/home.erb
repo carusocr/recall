@@ -75,7 +75,7 @@
   <br/>
 <% end %>
 <% @notes.sort_by {|v| [v[:status], v[:id]]}.reverse_each do |note| %>
-  <% note[:status] = :overdue if DateTime.parse("#{note[:created_at]}") < Date.today && note[:status] == 'new' %>
+  <% note[:status] = :overdue if DateTime.parse("#{note[:created_at]}") < Date.today && note[:status] == 'new' && note[:longterm] == false%>
   <% note[:status] = :repeater if note[:repeater] == true && note[:status] == 'new' %>
   <% if note[:created_at] == $curday && note[:longterm] == false || note[:status] == :overdue && DateTime.parse("#{note[:created_at]}") < $curday && $curday <= Date.today || note[:completed_at] == $curday || note[:status] == :doing %>
     <article class="<%= note[:status] %>">
