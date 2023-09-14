@@ -9,29 +9,6 @@
   <head></head>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js" type="text/javascript"></script>
-  <link href="datepicker.css" rel="stylesheet">
-    <script>
-      
-      $(function() {
-        $("#datepicker").datepicker();
-      });
-      $(function() {
-        $("#dp").change(function(){
-          $("#dp").submit();
-        });
-        $('#note_entry').keydown(function (e) {
-          if (e.which == 13) {
-            jQuery(this).blur();
-            jQuery("#note_input").focus().click();
-          }
-          if (e.which == 27) {
-            e.preventDefault();
-            $("#note_entry").val("");
-          }
-        });
-      });
-
-    </script>
     <meta charset="utf8">
       <link href="/reset.css" rel="stylesheet"></link>
       <link href="style.css" rel="stylesheet"></link>
@@ -52,32 +29,22 @@
           <a href="/present">&#9784</a>
           <a href="/nextday">&#8669</a>
         </h3>
-        <h4>
-          <p>
-            <form action="/datejump" id="dp" method="post">
-              <input id="datepicker" name="newdate" type="text" value="Jump to Date!"></input>
-            </form>
-          </p>
-        </h4>
       </hgroup>
     </header>
   </body>
 </html>
 <% if Date.today <= $curday %>
   <section id="new_note">
-    <form action="/" method="post">
+    <form action="/longterm" method="post">
       <textarea id="note_entry" name="content" placeholder="Your note..."></textarea>
       <input name="repeater" type="hidden" value="0"></input>
-      <input name="repeater" type="checkbox" value="1">Repeater</input>
-      <input id="note_input" type="submit" value="Take Note!"></input>
+      <input id="note_input" type="submit" value="Add Long Term Task!"></input>
     </form>
   </section>
   <br/>
 <% end %>
 <% @notes.sort_by {|v| [v[:status], v[:id]]}.reverse_each do |note| %>
-  <% note[:status] = :overdue if DateTime.parse("#{note[:created_at]}") < Date.today && note[:status] == 'new' %>
-  <% note[:status] = :repeater if note[:repeater] == true && note[:status] == 'new' %>
-  <% if note[:created_at] == $curday && note[:longterm] == false || note[:status] == :overdue && DateTime.parse("#{note[:created_at]}") < $curday && $curday <= Date.today || note[:completed_at] == $curday || note[:status] == :doing %>
+  <% if note[:longterm] == true and !note[:complete] %>
     <article class="<%= note[:status] %>">
       <% if !note[:complete] %>
         <a class="content" href="/<%= note[:id] %>">

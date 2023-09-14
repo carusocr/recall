@@ -30,6 +30,7 @@ unless DB.table_exists?(:notes)
 		TrueClass :complete, default: false
 		TrueClass :active, default: false
 		TrueClass :repeater, default: false
+		TrueClass :longterm, default: false
 	end
 end
 
@@ -37,9 +38,10 @@ end
 class Note < Sequel::Model
 end
 		
-def task_create(content, repeater)
+def task_create(content, repeater, longterm=false)
 	Note.create(content: params[content],
 							repeater: params[repeater],
+              longterm: longterm,
 							created_at: $curday)
 end
 
@@ -110,6 +112,12 @@ get '/prevday' do
   redirect '/'
 end
 
+get '/longterm' do
+  @notes = DB[:notes].where(longterm: true).all
+	@title = ' - CRC - '
+  erb :longterm, locals: {curday: $curday}
+end
+
 get '/:id' do
   edit(:id, 'content')
 end
@@ -126,6 +134,11 @@ end
 post '/' do
   task_create(:content, :repeater)
   redirect '/'
+end
+
+post '/longterm' do
+  task_create(:content, false, true)
+  redirect '/longterm'
 end
 
 
