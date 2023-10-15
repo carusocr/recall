@@ -122,7 +122,6 @@ get '/:id' do
   edit(:id, 'content')
 end
 
-
 post '/datejump' do
   if params[:newdate] == ''
   else
@@ -141,11 +140,12 @@ post '/longterm' do
   redirect '/longterm'
 end
 
-
 get '/:id/complete' do
   n = Note.where(id: params[:id]).first
-  puts n[:status].inspect
   if n[:status] == 'new' || n[:status] == 'slack' || n[:active] == true
+    if n[:status] = 'overdue'
+      n[:task_date] = $curday
+    end
     n[:status] = 'done'
     n[:complete] = true
     n[:active] = false
@@ -156,6 +156,7 @@ get '/:id/complete' do
   end
   n[:updated_at] = Time.now
   n[:completed_at] = $curday
+  puts n.inspect
   n.save
   redirect '/'
 end
