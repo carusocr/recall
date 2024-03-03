@@ -143,9 +143,6 @@ end
 get '/:id/complete' do
   n = Note.where(id: params[:id]).first
   if n[:status] == 'new' || n[:status] == 'slack' || n[:active] == true
-    if n[:status] = 'overdue'
-      n[:task_date] = $curday
-    end
     n[:status] = 'done'
     n[:complete] = true
     n[:active] = false
@@ -155,7 +152,8 @@ get '/:id/complete' do
     duration["#{n}"] = 0
   end
   n[:updated_at] = Time.now
-  n[:completed_at] = $curday
+  # kludge to get completed notes to show on current day
+  n[:created_at] = Date.today
   puts n.inspect
   n.save
   redirect '/'

@@ -109,8 +109,8 @@ article.slack {
   background-image: linear-gradient(to right, #EEDD82 0%, #C0B85D 100%);
 }
 article.overdue {
-  background-image: linear-gradient(to right, #942424 0%, #600000 100%);
-	color: #EEDD82;
+  background-image: linear-gradient(to right, #a00000 0%, #600000 100%);
+	color: #1EDD82;
 }
 article.repeater {
   background-image: linear-gradient(to right, #c4e8d8 0%, #b4c6b4 100%);
