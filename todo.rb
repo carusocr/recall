@@ -153,8 +153,7 @@ get '/:id/complete' do
   end
   n[:updated_at] = Time.now
   # kludge to get completed notes to show on current day
-  n[:created_at] = Date.today
-  puts n.inspect
+  n[:created_at] = Date.today unless n[:repeater]
   n.save
   redirect '/'
 end
