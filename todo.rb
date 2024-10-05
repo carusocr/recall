@@ -67,7 +67,7 @@ def check_repeaters()
   if Date.today.day == 10
     Note.find_or_create(:content=>"Rotate Mattress",:created_at=>Date.today)
   end
-  if Date.today.month % 2 == 0
+  if Date.today.month % 2 == 0 && Date.today.day == 6
     Note.find_or_create(:content=>"Water snake plant", :created_at=>Date.today)
   end
   repeaters = Note.where(repeater: true).each do |rep|
